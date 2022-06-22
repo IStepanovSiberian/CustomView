@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="UserAvatar">
+        <attr name="name" format="string" />
+        <attr name="image" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="MessagePreView">
+        <attr name="username" format="string" />
+        <attr name="message" format="string" />
+        <attr name="time" format="string" />
+        <attr name="avatar" format="integer" />
+    </declare-styleable>
+</resources>

@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">CustomView</string>
+    <string name="app_name">View Lifecycle</string>
     <string name="message_sample_username">Пол Уокер</string>
     <string name="message_sample_text">Эй, брат, давно тебя не было в Уличных гонках! Заезжай к нам - будет жарко!</string>
     <string name="message_sample_timestamp">30 ноя.</string>
+    <string name="message_sample_username2">Доминик Торетто</string>
+    <string name="message_sample_text2">Нельзя поворачиваться спиной к семье!</string>
+    <string name="message_sample_timestamp2">01 янв.</string>
 </resources>

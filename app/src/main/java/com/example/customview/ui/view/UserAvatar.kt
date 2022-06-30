@@ -14,6 +14,7 @@ import android.view.animation.RotateAnimation
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.content.ContextCompat
 import com.example.customview.R
+import timber.log.Timber
 
 class UserAvatar @JvmOverloads constructor(
     context: Context,
@@ -27,40 +28,45 @@ class UserAvatar @JvmOverloads constructor(
         duration = 1000
         repeatCount = Animation.ABSOLUTE
     }
+
     var image: Int = 0
-        set(image) {
-            field = image
-            if (image != 0) {
-                background = ContextCompat.getDrawable(context, image)
+        set(value) {
+            Timber.tag("            └── Lifecycle: UserAvatar: set IMAGE value").d(value.toString())
+            field = value
+            if (value != 0) {
+                background = ContextCompat.getDrawable(context, value)
                 foreground = null
+            } else {
+                background = null
             }
+            Timber.tag("            ├── Lifecycle: UserAvatar").e("INVALIDATE BEGIN")
             invalidate()
+            Timber.tag("            ├── Lifecycle: UserAvatar").e("INVALIDATE END")
+            Timber.tag("            ├── Lifecycle: UserAvatar").e("REQUEST_LAYOUT BEGIN")
             requestLayout()
+            Timber.tag("            ├── Lifecycle: UserAvatar").e("REQUEST_LAYOUT END")
         }
 
     var name: String? = null
         set(value) {
+            Timber.tag("            ├── Lifecycle: UserAvatar: set NAME value").d(value.toString())
             field = value
             if (background == null || image == 0) {
                 setBackgroundColor((Math.random() * 16777215).toInt() or (0xFF shl 24))
                 foreground = when {
                     value.isNullOrBlank() || value.length < 2 -> getTextDrawable("><")
                     value.contains(' ') -> getTextDrawable(
-                        value
-                            .split(" ")
-                            .joinToString("") {
-                                it.uppercase().first().toString()
-                            }
+                        value.split(" ").joinToString("") {
+                            it.uppercase().first().toString()
+                        }
                     )
                     else -> getTextDrawable(value.slice(0..2))
                 }
-
-                invalidate()
-                requestLayout()
             }
         }
 
     init {
+        Timber.tag("            └── Lifecycle: UserAvatar").d("init")
         isClickable = true
 
         val ats = context.theme.obtainStyledAttributes(attrs, R.styleable.UserAvatar, 0, 0)
@@ -74,18 +80,59 @@ class UserAvatar @JvmOverloads constructor(
     private fun getTextDrawable(text: String): Drawable {
         return ShapeDrawable(object : Shape() {
             override fun draw(canvas: Canvas, paint: Paint) {
-                paint.color = Color.WHITE
-                paint.textSize = (canvas.width / 2).toFloat()
-                paint.typeface = Typeface.DEFAULT_BOLD
-                paint.textAlign = Paint.Align.CENTER
                 canvas.drawText(
                     text,
                     (canvas.width / 2).toFloat(),
                     (canvas.height / 2).toFloat() - ((paint.descent() + paint.ascent()) / 2),
-                    paint
+                    paint.apply {
+                        color = Color.WHITE
+                        textSize = (canvas.width / 2).toFloat()
+                        typeface = Typeface.DEFAULT_BOLD
+                        textAlign = Paint.Align.CENTER
+                    }
                 )
             }
         }
         )
+    }
+
+    override fun onAttachedToWindow() {
+        Timber.tag("            └── Lifecycle: UserAvatar").d("ImageView - onAttachedToWindow")
+        super.onAttachedToWindow()
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        Timber.tag("            └── Lifecycle: UserAvatar").d("ImageView - onMeasure")
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
+
+    override fun layout(l: Int, t: Int, r: Int, b: Int) {
+        Timber.tag("            ├── Lifecycle: UserAvatar").d("View - layout")
+        super.layout(l, t, r, b)
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        Timber.tag("            └── Lifecycle: UserAvatar").d("View - onLayout")
+        super.onLayout(changed, left, top, right, bottom)
+    }
+
+    override fun dispatchDraw(canvas: Canvas?) {
+        Timber.tag("            └── Lifecycle: UserAvatar").d("View - dispatchDraw")
+        super.dispatchDraw(canvas)
+    }
+
+    override fun draw(canvas: Canvas?) {
+        Timber.tag("            ├── Lifecycle: UserAvatar").d("ImageFilterView - draw")
+        super.draw(canvas)
+    }
+
+    override fun onDraw(canvas: Canvas?) {
+        Timber.tag("            ├── Lifecycle: UserAvatar").d("ImageView - onDraw")
+        super.onDraw(canvas)
+    }
+
+    override fun requestLayout() {
+        Timber.tag("            └── Lifecycle: UserAvatar").d("View - requestLayout")
+        super.requestLayout()
     }
 }
